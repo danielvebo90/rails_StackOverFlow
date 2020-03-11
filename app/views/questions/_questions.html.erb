@@ -1,0 +1,24 @@
+<% @questions.each do |question| %>
+    <tr class="d-flex" id="question-<%= question.id %>">
+        <td class="text-center">
+            <h3><%= question.votes.count %></h3>
+            <p class="text-secondary">Votos</p>
+        </td>
+        <td class="text-center">
+            <h3><%= question.answers.count %></h3>
+            <p class="text-secondary">Respuestas</p>
+        </td>
+        <td class="text-left pl-5">
+            <%= link_to  question_path(question) do%>
+                <h3><%= markdown(question.title) %></h3>
+            <% end %>
+            <p class="text-secondary"><%= markdown(question.content) %></p>
+            <% if user_signed_in?%>
+                <% if current_user.id == question.user_id %>
+                    <%= link_to  'delete', question_path(question), remote: true, method: 'delete', data:{confirm: "Eliminar pregunta?"} %>
+                <% end %>
+            <% end %>
+            
+        </td>
+    </tr>
+<% end %>

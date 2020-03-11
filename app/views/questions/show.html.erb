@@ -1,0 +1,50 @@
+<div class="jumbotron">
+    <div>
+        <h2><%= markdown(@question.title) %></h2>
+        <div class="d-flex mx-4">
+            <div class="mx-3 text-center">
+                <% if @question.voted_by? current_user %>
+                    <i class="fas fa-caret-up" style="font-size: 35px;"></i>
+                    <h4><%= @question.votes.count %></h4>
+                    <%= link_to question_vote_path(@question), method: :delete do %>
+                        <i class="fas fa-caret-down" style="font-size: 35px;"></i>
+                    <% end %>
+                <% else %>
+                    <%= link_to question_votes_path(@question), method: :post do %>
+                        <i class="fas fa-caret-up" style="font-size: 35px;"></i>
+                    <% end %>
+                    <h4><%= @question.votes.count %></h4>
+                    <i class="fas fa-caret-down" style="font-size: 35px;"></i>
+                <% end %>
+                <p class="text-secondary">Votos</p>
+            </div>
+            <div class="flex-grow-1" >
+                <div>
+                    <p><%= markdown(@question.content) %></p>
+                </div>
+                <div>
+                    <div class="list-group" id="question-comment-list">
+                        <%= render  @question.comments %>   
+                    </div>
+                    <div class="mt-3 text-right">
+                        <% if user_signed_in? %>
+                            <%= render  "comments/form", commentable: @question %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3><span id="count-answers"><%= pluralize(@question.answers.count, 'Respuesta', plural: 'Respuestas') %></span></h3>
+    <hr class="my-4">
+    <div id="answer-list">
+        <%= render @question.answers %>
+    </div>
+    <% if user_signed_in? %>
+        <h3>Tu Respuesta</h3>
+        <hr class="my-4">
+        <div>
+            <%= render 'answers/form' %>
+        </div>
+    <% end %>
+</div>

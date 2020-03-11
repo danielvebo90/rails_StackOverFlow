@@ -1,0 +1,40 @@
+<div class="answer" id="answer-<%= answer.id %>">
+    <div class="d-flex mx-4 mb-4">
+        <div class="mx-3 text-center">
+            <% if answer.voted_by? current_user %>
+                <i class="fas fa-caret-up" style="font-size: 35px;"></i>
+                <h4><%= answer.votes.count %></h4>
+                <%= link_to answer_vote_path(answer), method: :delete do %>
+                    <i class="fas fa-caret-down" style="font-size: 35px;"></i>
+                <% end %>
+            <% else %>
+                <%= link_to answer_votes_path(answer), method: :post do %>
+                    <i class="fas fa-caret-up" style="font-size: 35px;"></i>
+                <% end %>
+                <h4><%= answer.votes.count %></h4>
+                <i class="fas fa-caret-down" style="font-size: 35px;"></i>
+            <% end %>
+            <p class="text-secondary">Votos</p>
+        </div>
+        <div class="flex-grow-1" >
+            <div>
+                <%= markdown(answer.content) %>
+                <% if user_signed_in?%>
+                <% if current_user.id == answer.user_id %>
+                    <%= link_to  'delete', [@question, answer], remote: true, method: 'delete', data:{confirm: "Eliminar respuesta?"} %>
+                <% end %>
+            <% end %>
+            </div>
+            <div>
+                <div class="list-group" id="answer-comment-list">
+                    <%= render  answer.comments %>
+                </div>
+                <div class="mt-3 text-right" id="form-comments-answer">
+                    <% if user_signed_in? %>
+                        <%= render  "comments/form", commentable: answer %>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
